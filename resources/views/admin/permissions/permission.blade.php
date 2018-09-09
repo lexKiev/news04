@@ -6,7 +6,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Role Editor
+                Permission Editor
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -22,25 +22,35 @@
 
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Add New Role</h3>
+                            <h3 class="box-title">Add New Permission</h3>
                         </div>
                         <!-- /.box-header -->
                     @include('shared.messages')
                         <!-- form start -->
-                        <form role="form" action="{{ route('roles.store') }}" method="post">
+                        <form role="form" action="{{ route('permissions.store') }}" method="post">
                             {{ csrf_field() }}
                             <div class="box-body">
                                 <div class="col-lg-offset-3 col-lg-6">
 
                                     <div class="form-group">
-                                        <label for="name">Role Title</label>
+                                        <label for="name">Permission Name</label>
                                         <input type="text" class="form-control" id="name" name="name"
-                                               placeholder="Enter role name">
+                                               placeholder="Enter permission name">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="for">Permission for</label>
+                                        <select name="for" id="for" class="form-control">
+                                            <option selected disabled>Select Permission For</option>
+                                            <option  value="user">User</option>
+                                            <option  value="post">post</option>
+                                            <option  value="other">other</option>
+                                        </select>
                                     </div>
 
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <a href="{{ route('roles.index') }}" class="btn btn-danger">Back</a>
+                                <a href="{{ route('permissions.index') }}" class="btn btn-danger">Back</a>
                             </div>
 
                     </div>

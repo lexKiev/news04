@@ -6,8 +6,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Text Editors
-                <small>Advanced form element</small>
+                Category Editor
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -23,11 +22,13 @@
 
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Titles</h3>
+                            <h3 class="box-title">Add New Category</h3>
                         </div>
                         <!-- /.box-header -->
-                        <!-- form start -->
-                        <form role="form">
+                        @include('shared.messages')
+                    <!-- form start -->
+                        <form role="form" action="{{ route('category.store') }}" method="post">
+                            {{ csrf_field() }}
                             <div class="box-body">
                                 <div class="col-lg-offset-3 col-lg-6">
 
@@ -45,6 +46,7 @@
 
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('category.index') }}" class="btn btn-danger">Back</a>
                                     </div>
                         </form>
                     </div>

@@ -13,7 +13,14 @@
 <link href="{{asset('user/vendor/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
 <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 <!-- Custom styles for this template -->
-<link href="{{('user/css/clean-blog.min.css')}}" rel="stylesheet">
+<link href="{{asset('user/css/clean-blog.min.css')}}" rel="stylesheet">
+<link href="{{asset('user/css/owl.carousel.min.css')}}" rel="stylesheet">
+<link href="{{asset('user/css/owl.theme.default.min.css')}}" rel="stylesheet">
+<link href="{{asset('user/css/owl.theme.green.min.css')}}" rel="stylesheet">
+
+<link href="{{asset('user/css/custom.css')}}" rel="stylesheet">
+
+
 </head>

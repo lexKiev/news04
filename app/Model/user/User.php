@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model\User;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -26,4 +26,26 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+	
+	/**
+	 * Connecting likes with user using eloquent has many relations
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function likes(){
+		return $this->hasMany('App\Model\user\Like');
+	}
+	
+	/**
+	 * Connecting comments with user using eloquent has many relations
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function comments()
+	{
+		return $this->hasMany('App\Model\admin\Comment');
+	}
+	
+	public function commentLike()
+	{
+		return $this->hasMany('App\Model\user\CommentLike');
+	}
 }

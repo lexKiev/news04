@@ -18,12 +18,12 @@ class CreateArticlesTable extends Migration
             $table->string('title', 255);
             $table->string('subtitle',100);
             $table->string('slug',100);
-            $table->text('content');
-            $table->boolean('status');
-            $table->integer('posted_by');
-            $table->string('img');
-	        $table->boolean('like');
-	        $table->boolean('dislike');
+            $table->text('body');
+            $table->boolean('status')->nullable(true);
+            $table->integer('posted_by')->nullable(true);
+            $table->string('img')->nullable(true);
+	        $table->boolean('like')->nullable(true);
+	        $table->boolean('dislike')->nullable(true);
             $table->timestamps();
         });
     }

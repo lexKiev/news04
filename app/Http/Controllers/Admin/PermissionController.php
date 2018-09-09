@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Model\Admin\Permission;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PermissionController extends Controller
 {
+	public function __construct()
+	{
+		$this->middleware('can:admin.view');
+	}
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+    	$permissions = Permission::all();
+        return view('admin.permissions.list',compact('permissions'));
     }
 
     /**
@@ -24,7 +30,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.permissions.permission');
     }
 
     /**
@@ -35,7 +41,19 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+        	'name' => 'required|max:50|unique:permissions',
+	        'for' => 'required'
+        ]);
+        
+        $permission = new Permission;
+        
+        $permission->name = $request->name;
+        $permission->for = $request->for;
+        $permission->save();
+        
+        return redirect(route('permissions.index'));
+        
     }
 
     /**
@@ -57,7 +75,9 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        //
+    	$permission = Permission::find($permission->id);
+    	
+        return view('admin.permissions.edit', compact('permission'));
     }
 
     /**
@@ -69,7 +89,18 @@ class PermissionController extends Controller
      */
     public function update(Request $request, Permission $permission)
     {
-        //
+	    $this->validate($request,[
+		    'name' => 'required|max:50',
+		    'for' => 'required'
+	    ]);
+	
+	    $permission = Permission::find($permission->id);
+	
+	    $permission->name = $request->name;
+	    $permission->for = $request->for;
+	    $permission->save();
+	    
+	    return redirect(route('permissions.index'))->with('message','Permission updated!');
     }
 
     /**
@@ -80,6 +111,7 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        //
+        Permission::where('id',$permission->id)->delete();
+        return redirect()->back()->with('message','Permission deleted!');
     }
 }

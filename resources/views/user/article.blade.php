@@ -1,55 +1,166 @@
 @extends('user.layouts.app')
 
-@section('bg-img',asset('user/img/post-bg.jpg'))
-@section('title','Article sample')
-@section('sub-heading','Article sub title')
+@section('bg-img',Storage::disk('local')->url($article->img))
+@section('title',$article->title)
+@section('sub-heading',$article->subtitle)
+
+
 
 @section('main-content')
+
     <!-- Post Content -->
     <article>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
-                    <p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
+                    {{--creation time--}}
+                    <small>Created {{ $article->created_at->diffForHumans() }}</small>
 
-                    <p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
+                    {{--showing all categories for this article--}}
+                    @foreach($article->categories as $category)
+                        <a href="{{route('category',$category->slug)}}">
+                            <small class="pull-right"
+                                   style="margin-right:10px; border-radius:  5px; border: 1px solid gray; padding: 5px">
+                                {{  $category->name }}
+                            </small>
+                        </a>
+                    @endforeach
 
-                    <p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
+                    {{--showing article body--}}
+                    {!! htmlspecialchars_decode($article->body) !!}
+                    @if($isAnalytic)
+                        <div class="card text-center" style="margin-bottom: 30px">
+                            <div class="card-body">
+                                <h5 class="card-title">Please login</h5>
+                                <p class="card-text">You must be a registered user to read complete article</p>
+                                <a href="{{ Route('login') }}" class="btn btn-primary">Login</a>
+                            </div>
+                        </div>
+                    @endif
+                    {{--showing all tags for this article--}}
+                    <hr>
+                    <br>
+                    <div id="likeblock" class="pull-right">
+                        <a href="#" id="1" class="like" @if($article->likedByUser)style="color: green" @endif>
+                            <small>{{ $article->like }}</small>
+                            <i class="fa fa-thumbs-up"></i>
+                        </a>
+                        <a href="#" id="0" class="like" @if($article->dislikedByUser)style="color: red" @endif>
+                            <small>{{ $article->dislike }}</small>
+                            <i class="fa fa-thumbs-down"></i>
+                        </a>
+                    </div>
 
-                    <p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 mx-auto">
+                            <h6>Tag Cloud</h6>
 
-                    <p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
+                            @foreach($article->tags as $tag)
+                                <a href="{{route('tag',$tag->slug)}}">
+                                    <small class="pull-left"
+                                           style="margin-right:10px; border-radius:  5px; border: 1px solid gray; padding: 5px">
+                                        {{ $tag->name }}
+                                    </small>
+                                </a>
 
-                    <h2 class="section-heading">The Final Frontier</h2>
+                            @endforeach
+                        </div>
+                    </div>
 
-                    <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
 
-                    <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
+                    <div class="row" id="comment-block">
+                        <div class="col-lg-12 col-md-12 mx-auto">
+                            <br>
+                            @include('shared.messages')
+                            <h6>Commentaries:</h6>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 mx-auto">
+                                    @if(Auth::user())
+                                        <form action="{{route('comment',$article->id)}}" method="post"
+                                              class="write-new">
+                                            {{csrf_field()}}
+                                            <textarea placeholder="Write your comment here" name="comment"></textarea>
+                                            <div>
+                                                <button type="submit">Submit</button>
+                                            </div>
+                                        </form>
+                                    @else
+                                        <div class="card text-center " style="margin-bottom: 30px">
+                                            <div class="card-body">
+                                                <h5 class="card-title g-font-size-12">Please login</h5>
+                                                <p class="card-text g-font-size-12">You must be a registered user to
+                                                    leave a commentary</p>
+                                                <a href="{{ Route('login') }}" class="btn btn-primary g-font-size-12">Login</a>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            @if($comments)
+                                @foreach($comments as $comment)
+                                    <div class="media g-mb-30 media-comment">
+                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15"
+                                             src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                             alt="Image Description">
+                                        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+                                            <div class="g-mb-15">
+                                                <h5 class="h5 g-color-gray-dark-v1 mb-0">{{ $comment->name }}</h5>
+                                                <span class="g-color-gray-dark-v4 g-font-size-10">{{ $comment->created_at->diffForHumans() }}</span>
+                                            </div>
+                                            <p class="g-font-size-13 comment-text">
+                                                {{ $comment->comment }}
+                                            </p>
+                                            <ul class="list-inline d-sm-flex my-0 g-font-size-12"
+                                                id="commentLikeBlock{{$comment->id}}">
+                                                <li class="list-inline-item g-mr-20">
 
-                    <blockquote class="blockquote">The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
-
-                    <p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
-
-                    <h2 class="section-heading">Reaching for the Stars</h2>
-
-                    <p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
-
-                    <a href="#">
-                        <img class="img-fluid" src="img/post-sample-image.jpg" alt="">
-                    </a>
-                    <span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
-
-                    <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
-
-                    <p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
-
-                    <p>Placeholder text by
-                        <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by
-                        <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+                                                    <a class="commentLike u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+                                                       @if($comment->likedByUser) style="color: green" @endif
+                                                       href="{{route('commentlike',$comment->id)}}" id="1" name="">
+                                                        <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>
+                                                        {{$comment->like}}
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item g-mr-20">
+                                                    <a class="commentLike u-link-v5 g-color-gray-dark-v4 g-color-primary--hover"
+                                                       @if($comment->dislikedByUser)style="color: red" @endif
+                                                       href="{{route('commentlike',$comment->id)}}" id="0">
+                                                        <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3 "></i>
+                                                        {{$comment->dislike}}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    <div><br>This article viewed:
+                        <span id="totalViews"></span>
+                    </div>
+                    <div>Currently watching:
+                        <span id="currentrlyViews"></span>
+                    </div>
                 </div>
+
             </div>
+
         </div>
     </article>
 
+
     <hr>
+@endsection
+
+@section('footerSection')
+
+    <script>
+        var urlLogin = '{{ route('login')}}';
+        var token = '{{ csrf_token() }}';
+        var urlLike = '{{ route('like', $article->slug) }}';
+        var urlVisit = '{{ route('visit',$article->slug) }}'
+
+    </script>
+
 @endsection

@@ -8,7 +8,7 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p>Alex Pshegodsky</p>
+                <p>{{ Auth::user()->name }}</p>
             </div>
         </div>
         <!-- search form -->
@@ -33,10 +33,21 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Articles</a></li>
-                    <li class=""><a href="index.html"><i class="fa fa-circle-o"></i> Categories</a></li>
-                    <li class=""><a href="index.html"><i class="fa fa-circle-o"></i> Tags</a></li>
-                    <li class=""><a href="index.html"><i class="fa fa-circle-o"></i> Users</a></li>
+                    <li class=""><a href="{{ route('post.index') }}"><i class="fa fa-circle-o"></i> Articles</a></li>
+                    @can('post.commentaries',Auth::user())
+                    <li class=""><a href="{{ route('commentaries.index') }}"><i class="fa fa-circle-o"></i> Commentaries</a></li>
+                    @endcan
+                    @can('post.category',Auth::user())
+                    <li class=""><a href="{{ route('category.index') }}"><i class="fa fa-circle-o"></i> Categories</a></li>
+                    @endcan
+                    @can('post.tag',Auth::user())
+                    <li class=""><a href="{{ route('tag.index') }}"><i class="fa fa-circle-o"></i> Tags</a></li>
+                    @endcan
+                    @can('admin.view',Auth::user())
+                    <li class=""><a href="{{ route('user.index') }}"><i class="fa fa-circle-o"></i> Users</a></li>
+                    <li class=""><a href="{{ route('roles.index') }}"><i class="fa fa-circle-o"></i> Roles</a></li>
+                    <li class=""><a href="{{ route('permissions.index') }}"><i class="fa fa-circle-o"></i> Permissions</a></li>
+                    @endcan
                 </ul>
             </li>
         </ul>

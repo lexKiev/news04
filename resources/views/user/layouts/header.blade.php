@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-        <a class="navbar-brand" href="index.html">Start Bootstrap</a>
+        <a class="navbar-brand" href="{{ route('home') }}">News04</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -10,17 +10,40 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
+                    <a class="nav-link" href="{{ route('home') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="about.html">About</a>
+                    <a class="nav-link" href="{{ route('categoryList') }}">Categories</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="post.html">Sample Post</a>
+                    <a class="nav-link" href="{{ route('tagList') }}">Tags</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
+                    <a class="nav-link" href="{{ route('activity') }}">Activity</a>
                 </li>
+
+                    @if(Auth::guest())
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Logged as: {{ Auth::user()->name }}</a>
+                    </li>
+                    <li class="nav-item">
+                            <a class="nav-link" href="#"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                    </li>
+                    @endif
+
+
             </ul>
         </div>
     </div>
@@ -29,14 +52,17 @@
 <!-- Page Header -->
 <header class="masthead" style="background-image: url(@yield('bg-img')">
     <div class="overlay"></div>
+
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="site-heading">
                     <h1>@yield('title')</h1>
                     <span class="subheading">@yield('sub-heading')</span>
+                    {{--<select class="itemName form-control" style="width:500px;" name="itemName"></select>--}}
                 </div>
             </div>
         </div>
     </div>
 </header>
+
